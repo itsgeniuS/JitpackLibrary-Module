@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "JitpackLibrary-Module"
 include(":app")
- 
+include(":utils")
