@@ -1,8 +1,7 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
-
-	id("maven-publish") //add this publish support plugin
+	id("maven-publish") // Add this publish support plugin
 }
 
 android {
@@ -31,56 +30,61 @@ android {
 			)
 		}
 	}
+
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_17
 		targetCompatibility = JavaVersion.VERSION_17
 	}
+
 	kotlinOptions {
 		jvmTarget = "17"
 	}
+
 	buildFeatures {
 		compose = true
 	}
+
 	composeOptions {
 		kotlinCompilerExtensionVersion = "1.5.1"
 	}
+
 	packaging {
 		resources {
 			excludes += "/META-INF/{AL2.0,LGPL2.1}"
 		}
-
 	}
+}
 
-	publishing {
-		singleVariant("release") {
-			withSourcesJar()
-			withJavadocJar()
-		}
-	}
-
-	configure<PublishingExtension> {
-		publications.create<MavenPublication>(ConfigData.PublishingData.ARTIFACT_ID) {
-
+publishing {
+	publications {
+		create<MavenPublication>(ConfigData.PublishingData.ARTIFACT_ID) {
 			groupId = ConfigData.PublishingData.GROUP_ID
 			artifactId = ConfigData.PublishingData.ARTIFACT_ID
 			version = ConfigData.PublishingData.RELEASE_VERSION
-			artifact(ConfigData.PublishingData.ARTIFACT_PATH)
+			artifact(file(ConfigData.PublishingData.ARTIFACT_PATH))
 
 			pom {
-				name = ConfigData.PublicationData.PUBLISHER_NAME
-				description = ConfigData.PublicationData.PUBLISHER_DESCRIPTION
-				url = ConfigData.PublicationData.PUBLISHER_URL
+				name.set(ConfigData.PublicationData.PUBLISHER_NAME)
+				description.set(ConfigData.PublicationData.PUBLISHER_DESCRIPTION)
+				url.set(ConfigData.PublicationData.PUBLISHER_URL)
 
 				developers {
-					name = ConfigData.PublisherData.AUTHOR_NAME
-					description = ConfigData.PublisherData.AUTHOR_EMAIL
-					organization {
-						url = ConfigData.PublisherData.AUTHOR_PORTFOLIO
+					developer {
+						id.set("geniusdev")
+						name.set(ConfigData.PublisherData.AUTHOR_NAME)
+						email.set(ConfigData.PublisherData.AUTHOR_EMAIL)
+						organization {
+							url.set(ConfigData.PublisherData.AUTHOR_PORTFOLIO)
+						}
 					}
 				}
 			}
 		}
 	}
+}
+
+tasks.named("publishUtilsPublicationToMavenLocal") {
+	dependsOn(":utils:bundleReleaseAar")
 }
 
 dependencies {
